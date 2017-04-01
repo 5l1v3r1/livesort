@@ -11,13 +11,14 @@ type Comparison struct {
 
 // A Sorter maintains the state of a sort.
 //
+// You should never add a comparison by modifying the
+// Comparisons field, since doing so might result in a
+// cycle.
+// Instead, use the Add() method.
+//
 // A Sorter only works for elements that can be used as
 // map keys.
 // So, for example, slices cannot be used.
-//
-// You should never add a comparison by modify a Sorter's
-// Comparisons field, since doing so might result in a
-// cycle.
 type Sorter struct {
 	Comparisons []*Comparison
 	Elements    []interface{}
