@@ -1,0 +1,69 @@
+body, html {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+#picker > * {
+  display: none;
+}
+
+#picker.options > #images {
+  display: block;
+}
+
+#picker.no-options > #loader {
+  display: block;
+}
+
+#picker.error > #error {
+  display: block;
+}
+
+#images {
+  position: absolute;
+  height: 100%;
+}
+
+@media (max-width: 600px) {
+  #images {
+    left: 0;
+    width: 100%;
+  }
+}
+
+@media (min-width: 600px) {
+  #images {
+    width: 600px;
+    left: calc(50% - 300px);
+  }
+}
+
+img {
+  width: calc(50% - 20px);
+  align: center;
+  vertical-align: middle;
+  border: 2px solid white;
+}
+
+#left-image {
+  float: left;
+  margin: 10px;
+}
+
+#right-image {
+  float: right;
+  margin: 10px;
+}
+
+#error {
+  color: red;
+  font-size: 2em;
+  text-align: center;
+  margin-top: 30px;
+}
+
+#loader {
+  font-size: 2em;
+  text-align: center;
+  margin-top: 30px;
+}

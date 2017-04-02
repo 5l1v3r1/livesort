@@ -1,4 +1,4 @@
-package imgsort
+package main
 
 import (
 	"encoding/gob"
@@ -26,7 +26,7 @@ func ReadSorter(path string) (*livesort.Sorter, error) {
 // CreateSorter creates a sorter file.
 func CreateSorter(imgDir *ImgDir, path string) (*livesort.Sorter, error) {
 	sorter := &livesort.Sorter{Elements: imgDir.InterfaceNames()}
-	return sorter, saveSorter(path, sorter)
+	return sorter, SaveSorter(path, sorter)
 }
 
 // SaveSorter saves a sorter to a file.

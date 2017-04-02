@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 
 	"github.com/unixpickle/essentials"
 	"github.com/unixpickle/livesort"
@@ -67,7 +68,7 @@ func Serve(args []string) {
 
 	http.HandleFunc("/assets/", func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Path[len("/assets/"):]
-		if !AssetExpr.Match(name) {
+		if !AssetExpr.MatchString(name) {
 			name = "404.html"
 		}
 		http.ServeFile(w, r, filepath.Join(assetDir, name))
@@ -76,26 +77,33 @@ func Serve(args []string) {
 	http.HandleFunc("/image", func(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("name")
 		if !imgDir.Contains(name) {
-			serve
+			serveError(w, r, "no such image")
+			return
 		}
 		http.ServeFile(w, r, filepath.Join(imgDir.Path, name))
 	})
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: see if we need to check for "".
-		if r.URL == "/" || r.URL == "" {
+		if r.URL.Path == "/" || r.URL.Path == "" {
 			http.ServeFile(w, r, filepath.Join(assetDir, "index.html"))
 		} else {
 			http.ServeFile(w, r, filepath.Join(assetDir, "404.html"))
 		}
 	})
+
+	log.Printf("Listening on port %d...", port)
+	err = http.ListenAndServe(":"+strconv.Itoa(port), nil)
+	if err != nil {
+		essentials.Die(err)
+	}
 }
 
 func initSorter(imgDir *ImgDir, path string) (*livesort.Sorter, error) {
-	sorter, err := ReadSorter(savePath)
+	sorter, err := ReadSorter(path)
 	if os.IsNotExist(err) {
 		log.Println("Creating new sorter...")
-		sorter, err = CreateSorter(imgDir, savePath)
+		sorter, err = CreateSorter(imgDir, path)
 		if err != nil {
 			return nil, err
 		}
@@ -104,6 +112,8 @@ func initSorter(imgDir *ImgDir, path string) (*livesort.Sorter, error) {
 	} else {
 		log.Println("Loaded sorter.")
 	}
+	// Deal with image deletions/insertions.
+	sorter.Elements = imgDir.InterfaceNames()
 	return sorter, nil
 }
 
