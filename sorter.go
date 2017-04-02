@@ -98,6 +98,9 @@ func (s *Sorter) graph() graph {
 	for _, comp := range s.Comparisons {
 		parent := entToNode[comp.Lesser]
 		child := entToNode[comp.Greater]
+		if parent == nil || child == nil {
+			continue
+		}
 		parent.children[child] = struct{}{}
 		child.parents[parent] = struct{}{}
 	}
