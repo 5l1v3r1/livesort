@@ -83,6 +83,14 @@ func Serve(args []string) {
 		http.ServeFile(w, r, filepath.Join(imgDir.Path, name))
 	})
 
+	http.HandleFunc("/undo", func(w http.ResponseWriter, r *http.Request) {
+		if len(sorter.Comparisons) > 0 {
+			sorter.Comparisons = sorter.Comparisons[:len(sorter.Comparisons)-1]
+			SaveSorter(savePath, sorter)
+		}
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	})
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: see if we need to check for "".
 		if r.URL.Path == "/" || r.URL.Path == "" {

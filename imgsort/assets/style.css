@@ -1,4 +1,5 @@
 body, html {
+  text-align: center;
   margin: 0;
   font-family: sans-serif;
 }
@@ -22,6 +23,7 @@ body, html {
 #images {
   position: absolute;
   height: 100%;
+  top: 30px;
 }
 
 @media (max-width: 600px) {
@@ -43,6 +45,7 @@ img {
   align: center;
   vertical-align: middle;
   border: 2px solid white;
+  cursor: pointer;
 }
 
 #left-image {
