@@ -20,6 +20,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Available commands:")
 		fmt.Fprintln(os.Stderr, " serve    run HTTP server")
 		fmt.Fprintln(os.Stderr, " sort     print sorted filename list")
+		fmt.Fprintln(os.Stderr, " count    count the number of comparisons")
 		fmt.Fprintln(os.Stderr)
 		os.Exit(1)
 	}
@@ -29,6 +30,8 @@ func main() {
 		Serve(os.Args[2:])
 	case "sort":
 		Sort(os.Args[2:])
+	case "count":
+		Count(os.Args[2:])
 	default:
 		essentials.Die("unknown command:", os.Args[1])
 	}
