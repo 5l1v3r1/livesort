@@ -6,20 +6,28 @@ type graphNode struct {
 	children map[*graphNode]struct{}
 }
 
-func (g *graphNode) Delete() {
+// Delete removes the node and returns all of the newly
+// exposed root nodes.
+func (g *graphNode) Delete() []*graphNode {
 	for parent := range g.parents {
 		delete(parent.children, g)
 	}
+	var res []*graphNode
 	for child := range g.children {
 		delete(child.parents, g)
+		if len(child.parents) == 0 {
+			res = append(res, child)
+		}
 	}
+	return res
 }
 
 type graph map[*graphNode]struct{}
 
-func (g graph) Delete(node *graphNode) {
-	node.Delete()
+func (g graph) Delete(node *graphNode) []*graphNode {
+	res := node.Delete()
 	delete(g, node)
+	return res
 }
 
 func (g graph) Roots() []*graphNode {
@@ -37,14 +45,16 @@ func (g graph) Cyclic() bool {
 	for k, v := range g {
 		g1[k] = v
 	}
+	roots := g1.Roots()
 	for len(g1) > 0 {
-		roots := g1.Roots()
 		if len(roots) == 0 {
 			return true
 		}
+		var newRoots []*graphNode
 		for _, root := range roots {
-			g1.Delete(root)
+			newRoots = append(newRoots, g1.Delete(root)...)
 		}
+		roots = newRoots
 	}
 	return false
 }

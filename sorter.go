@@ -31,12 +31,12 @@ type Sorter struct {
 // fully sorted), this returns (nil, nil).
 func (s *Sorter) Request() (interface{}, interface{}) {
 	g := s.graph()
+	roots := g.Roots()
 	for len(g) > 0 {
-		roots := g.Roots()
 		if len(roots) == 0 {
 			return nil, nil
 		} else if len(roots) == 1 {
-			g.Delete(roots[0])
+			roots = g.Delete(roots[0])
 		} else {
 			return randomValuePair(roots)
 		}
@@ -70,15 +70,17 @@ func (s *Sorter) Add(lesser, greater interface{}) bool {
 func (s *Sorter) Sort() []interface{} {
 	var res []interface{}
 	g := s.graph()
+	roots := g.Roots()
 	for len(g) > 0 {
-		roots := g.Roots()
 		if len(roots) == 0 {
 			panic("cycle detected")
 		}
+		var newRoots []*graphNode
 		for _, node := range roots {
 			res = append(res, node.value)
-			g.Delete(node)
+			newRoots = append(newRoots, g.Delete(node)...)
 		}
+		roots = newRoots
 	}
 	return res
 }
