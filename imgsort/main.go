@@ -1,3 +1,5 @@
+// Command imgsort is a small web application for sorting
+// hundreds of images based on some user-decided criteria.
 package main
 
 import (
@@ -21,6 +23,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, " serve    run HTTP server")
 		fmt.Fprintln(os.Stderr, " sort     print sorted filename list")
 		fmt.Fprintln(os.Stderr, " count    count the number of comparisons")
+		fmt.Fprintln(os.Stderr, " rank     produce numerical rankings")
 		fmt.Fprintln(os.Stderr)
 		os.Exit(1)
 	}
@@ -32,6 +35,8 @@ func main() {
 		Sort(os.Args[2:])
 	case "count":
 		Count(os.Args[2:])
+	case "rank":
+		Rank(os.Args[2:])
 	default:
 		essentials.Die("unknown command:", os.Args[1])
 	}
