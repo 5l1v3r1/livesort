@@ -12,7 +12,7 @@ func Rank(args []string) {
 	var sorterPath string
 	var iters int
 
-	fs := flag.NewFlagSet("sort", flag.ExitOnError)
+	fs := flag.NewFlagSet("rank", flag.ExitOnError)
 	fs.StringVar(&sorterPath, "data", "sort_data", "where to read sort results")
 	fs.IntVar(&iters, "iters", 100, "number of iterations")
 	fs.Parse(args)

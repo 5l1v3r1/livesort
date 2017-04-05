@@ -24,6 +24,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, " sort     print sorted filename list")
 		fmt.Fprintln(os.Stderr, " count    count the number of comparisons")
 		fmt.Fprintln(os.Stderr, " rank     produce numerical rankings")
+		fmt.Fprintln(os.Stderr, " numcomp  get comparison count per image")
 		fmt.Fprintln(os.Stderr)
 		os.Exit(1)
 	}
@@ -37,6 +38,8 @@ func main() {
 		Count(os.Args[2:])
 	case "rank":
 		Rank(os.Args[2:])
+	case "numcomp":
+		NumComp(os.Args[2:])
 	default:
 		essentials.Die("unknown command:", os.Args[1])
 	}
