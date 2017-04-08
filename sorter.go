@@ -75,12 +75,11 @@ func (s *Sorter) Sort() []interface{} {
 		if len(roots) == 0 {
 			panic("cycle detected")
 		}
-		var newRoots []*graphNode
-		for _, node := range roots {
-			res = append(res, node.value)
-			newRoots = append(newRoots, g.Delete(node)...)
-		}
-		roots = newRoots
+		idx := rand.Intn(len(roots))
+		node := roots[idx]
+		roots[idx] = roots[len(roots)-1]
+		res = append(res, node.value)
+		roots = append(roots[:len(roots)-1], g.Delete(node)...)
 	}
 	return res
 }

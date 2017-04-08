@@ -2,6 +2,7 @@ package livesort
 
 import (
 	"math/rand"
+	"reflect"
 	"testing"
 )
 
@@ -49,6 +50,47 @@ func TestReject(t *testing.T) {
 	}
 	if !sorter.Add(0, 2) {
 		t.Fatal("wrongful rejection")
+	}
+}
+
+func TestSortRandom(t *testing.T) {
+	// Create a list of integers, which is almost sorted.
+	// The edges connecting 0 and 9 are deleted, so that they
+	// can be anywhere in the sorted sequence.
+
+	sorter := &Sorter{}
+	for i := 0; i < 10; i++ {
+		sorter.Elements = append(sorter.Elements, i)
+		if i > 0 {
+			sorter.Comparisons = append(sorter.Comparisons, &Comparison{
+				Lesser:  i - 1,
+				Greater: i,
+			})
+		}
+	}
+
+	// Remove first and last edge.
+	sorter.Comparisons = sorter.Comparisons[1 : len(sorter.Comparisons)-1]
+
+	sortResults := [][]interface{}{}
+	addResult := func(res []interface{}) {
+		for _, x := range sortResults {
+			if reflect.DeepEqual(x, res) {
+				return
+			}
+		}
+		sortResults = append(sortResults, res)
+	}
+
+	for i := 0; i < 50000; i++ {
+		addResult(sorter.Sort())
+	}
+
+	// Two nodes can be anywhere, so (10 choose 2) * 2!.
+	expectedNum := 10 * 9
+
+	if len(sortResults) != expectedNum {
+		t.Errorf("expected %d results but got %d", expectedNum, len(sortResults))
 	}
 }
 
